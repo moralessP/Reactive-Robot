@@ -2,19 +2,19 @@
 ## Directory structure
 
 ./
-├── mp23                  # Package for My Robot Model
-│   ├── config            # Configuration Files (e.g., joint configurations)
-│   ├── description       # Robot's URDF Description Files
-│   ├── launch            # Launch Files to Spawn mp23 in Gazebo, RViz, and Robot State Publisher
-│   ├── worlds            # Custom World Files
+├── mp23                  # Package for My Robot Model<br />
+│   ├── config            # Configuration Files (e.g., joint configurations)<br />
+│   ├── description       # Robot's URDF Description Files<br />
+│   ├── launch            # Launch Files to Spawn mp23 in Gazebo, RViz, and Robot State Publisher<br />
+│   ├── worlds            # Custom World Files<br />
 │   ├── CMakeLists.txt
 │   ├── package.xml
-├── wall_follower         # Package for My Wall-Following Algorithm
-│   ├── launch            # Launch Files for Running the Scripts
-│   ├── scripts           # Algorithm Scripts for Wall Following
-│   ├── CMakeLists.txt
-│   ├── package.xml
-├── README.txt             # Project Documentation
+├── wall_follower         # Package for My Wall-Following Algorithm<br />
+│   ├── launch            # Launch Files for Running the Scripts<br />
+│   ├── scripts           # Algorithm Scripts for Wall Following<br />
+│   ├── CMakeLists.txt<br />
+│   ├── package.xml<br />
+├── README.txt             # Project Documentation<br />
 ./
 
 
