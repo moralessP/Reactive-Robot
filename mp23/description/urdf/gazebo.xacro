@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<gazebo reference="chassis">
+		<material>Gazebo/Blue</material>
+	</gazebo>
+	
+	<gazebo reference="caster_wheel_b">
+		<mu1>0.01</mu1>
+		<mu2>0.01</mu2>
+		<turnGravityOff>false</turnGravityOff>
+		<material>Gazebo/Red</material>
+	</gazebo>
+	
+	<gazebo reference="caster_wheel_f">
+		<mu1>0.01</mu1>
+		<mu2>0.01</mu2>
+		<turnGravityOff>false</turnGravityOff>
+		<material>Gazebo/Red</material>
+	</gazebo>
+
+	<gazebo reference="left_wheel">
+		<mu1 value="1.0"/>
+		<mu2 value="1.0"/>
+		<kp value="10000000.0" />
+		<kd value="1.0" />
+		<fdir1 value="1 0 0"/>
+		<material>Gazebo/White</material>
+	</gazebo>
+	
+	<gazebo reference="right_wheel">
+		<mu1 value="1.0"/>
+		<mu2 value="1.0"/>
+		<kp value="10000000.0" />
+		<kd value="1.0" />
+		<fdir1 value="1 0 0"/>
+		<material>Gazebo/White</material>
+	</gazebo>
+	
+	
+	<gazebo>
+		<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+			<robotNamespace>/robot</robotNamespace>
+		</plugin>
+	</gazebo>
+	
+	<gazebo>
+    <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+        <jointName>left_wheel_hinge,right_wheel_hinge</jointName>
+    </plugin>
+  </gazebo>
+	
+	<gazebo>
+		<plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+			<alwaysOn>true</alwaysOn>
+			<updateRate>100</updateRate>
+			<leftJoint>left_wheel_hinge</leftJoint>
+			<rightJoint>right_wheel_hinge</rightJoint>
+			<wheelSeparation>${2*chassisRadius}</wheelSeparation>
+			<wheelDiameter>${2*wheelRadius}</wheelDiameter>
+			<torque>20</torque>
+			<commandTopic>mp23/cmd_vel</commandTopic>
+			<odometryTopic>mp23/odom</odometryTopic>
+			<odometryFrame>odom</odometryFrame>
+			<robotBaseFrame>chassis</robotBaseFrame>
+		</plugin>
+		
+	</gazebo>
+	
+	<gazebo reference="hokuyo">
+		<sensor type="ray" name="laser">
+			<pose>0 0 0 0 0 0</pose>
+			<visualize>true</visualize>
+			<update_rate>20</update_rate>
+			<ray>
+				<scan>
+					<horizontal>
+						<samples>720</samples>
+						<resolution>1</resolution>
+						<min_angle>-1.570796</min_angle>
+						<max_angle>1.570796</max_angle>
+					</horizontal>
+				</scan>
+				<range>
+					<min>0.10</min>
+					<max>30.0</max>
+					<resolution>0.01</resolution>
+				</range>
+				<noise>
+					<type>gaussian</type>
+					<mean>0.0</mean>
+					<stddev>0.01</stddev>
+				</noise>
+			</ray>
+
+			<plugin name="gazebo_ros_head_hokuyo_controller"
+				filename="libgazebo_ros_laser.so">
+				<topicName>mp23/laser_scan</topicName>
+				<frameName>hokuyo</frameName>
+			</plugin>
+		</sensor>
+	</gazebo>
+
+</robot>

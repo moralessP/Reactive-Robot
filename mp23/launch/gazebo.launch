@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+	<arg name="random_x" default="4" />
+	<arg name="random_y" default="0" />
+	<arg name="random_yaw" default="-3" />
+
+	<include file="$(find gazebo_ros)/launch/empty_world.launch">
+		<arg name="world_name" value="$(find mp23)/worlds/robot.world"/>
+		<arg name="gui" value="true"/>
+	</include>
+
+
+	<param name="mp23_description" command="$(find xacro)/xacro '$(find mp23)/description/urdf/main.xacro'"/>
+
+	<node name="robot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
+	args="-urdf -param mp23_description -model mp23 -x $(arg random_x) -y $(arg random_y) -z 0 -Y $(arg random_yaw)" />
+	
+
+	<include file="$(find mp23)/launch/robot_control.launch" />
+
+
+</launch>

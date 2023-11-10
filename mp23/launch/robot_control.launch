@@ -1,0 +1,22 @@
+<launch>
+
+  <param name="robot_description" command="$(find xacro)/xacro '$(find mp23)/description/urdf/main.xacro'"/>
+  <rosparam file="$(find mp23)/config/robot_control.yaml" command="load"/>
+  
+
+  <node name="controller_spawner"
+    pkg="controller_manager"
+    type="spawner" respawn="false"
+    output="screen" ns="/mp23"
+    args="joint_state_controller
+      rightWheel_effort_controller
+      leftWheel_effort_controller"
+  />
+
+    <!-- convert joint states to TF transforms for rviz, etc -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+    <param name="robot_description" command="$(find xacro)/xacro '$(find mp23)/description/urdf/main.xacro'" />
+    <remap from="/joint_states" to="mp23/joint_states" />
+  </node>
+
+</launch>

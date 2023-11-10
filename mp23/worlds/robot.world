@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<sdf version="1.4">
+  <world name="Default">
+
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <model name="question_mark">
+      <pose>7.5 5 0  1.575 0 -1.57</pose>
+      <static>true</static>
+      <link name="question_link">
+        <collision name="collision">
+          <geometry>
+            <mesh><uri>file:///home/ride/catkin_ws/src/mp23/worlds/meshes/map.STL</uri></mesh>
+            <!--CHANGE THIS PATH WITH YOURS -->
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/ride/catkin_ws/src/mp23/worlds/meshes/map.STL</uri>
+              <!--CHANGE THIS PATH WITH YOURS -->
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>

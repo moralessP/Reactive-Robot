@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<robot name="mp23" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+
+	<xacro:property name="PI" value="3.1415926535897931"/>
+	<xacro:property name="chassisHeight" value="0.1"/>
+	<xacro:property name="chassisRadius" value="0.25"/>
+	<xacro:property name="chassisMass" value="5"/>
+	<xacro:property name="wheelHeight" value="0.04"/>
+	<xacro:property name="wheelRadius" value="0.11"/>
+	<xacro:property name="wheelPos" value="0.25"/>
+	<xacro:property name="wheelMass" value="2.5"/>
+	<xacro:property name="casterRadius" value="0.053"/>
+	<xacro:property name="casterMass" value="0.5"/>
+
+	<xacro:include filename="$(find mp23)/description/urdf/gazebo.xacro" />
+	<xacro:include filename="$(find mp23)/description/urdf/materials.xacro" />
+	<xacro:include filename="$(find mp23)/description/urdf/macros.xacro" />
+	
+	
+<!--ADD CHASSIS-->																											<!--LINKS-->
+	<link name="chassis">
+		<pose> 0 0 0.1 0 0 0 </pose>
+			<collision>
+			<origin xyz="0 0 0" rpy="0 0 0"/> 
+			<geometry> 
+				<cylinder length="${chassisHeight}" radius="${chassisRadius}" />
+			</geometry> 
+		</collision>
+		
+		<visual>
+			<origin xyz="0 0 0" rpy="0 0 0"/> 
+			<geometry> 
+				<cylinder length="${chassisHeight}" radius="${chassisRadius}" />
+			</geometry> 
+			<material name="blue"/>
+		</visual>
+		
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 0 0"/> 
+			<mass value="${chassisMass}"/> 
+			<xacro:inertial_cylinder m="${chassisMass}" r="${chassisRadius}" h="${chassisHeight}"/>
+		</inertial>
+	</link>
+
+<!--ADD WHEELS CASTER-->
+	<joint name="fixed_f" type="fixed">
+		<parent link="chassis"/>
+		<child link="caster_wheel_f"/>
+		<origin xyz="0.135 0.0 -0.047" rpy="${-PI/2} 0 0"/>
+	</joint>
+
+	<link name="caster_wheel_f">
+		<collision>
+			<origin xyz="0.01 0.01 0" rpy="0 0 0"/>
+			<geometry>
+				<sphere radius="${casterRadius}"/>
+			</geometry>
+		</collision>
+		
+		<visual>
+			<origin xyz="0.01 0.01 0" rpy="0 0 0"/>
+			<geometry>
+				<sphere radius="${casterRadius}"/>
+			</geometry>
+			<material name="red"/>
+		</visual>
+		
+		<inertial>
+			<origin xyz="0.01 0.01 0" rpy="0 0 0"/>
+			<mass value="${casterMass}"/>
+			<xacro:inertial_sphere m="${casterMass}" r="${casterRadius}"/>
+		</inertial>
+		</link>
+
+	<joint name="fixed_b" type="fixed">
+		<parent link="chassis"/>
+		<child link="caster_wheel_b"/>
+		<origin xyz="-0.135 0.0 -0.047" rpy="${-PI/2} 0 0"/>
+	</joint>
+
+	<link name="caster_wheel_b">
+		<collision>
+			<origin xyz="0.01 0.01 0" rpy="0 0 0"/>
+			<geometry>
+				<sphere radius="${casterRadius}"/>
+			</geometry>
+		</collision>
+		
+		<visual>
+			<origin xyz="0.01 0.01 0" rpy="0 0 0"/>
+			<geometry>
+				<sphere radius="${casterRadius}"/>
+			</geometry>
+			<material name="red"/>
+		</visual>
+		
+		<inertial>
+			<origin xyz="0.01 0.01 0" rpy="0 0 0"/>
+			<mass value="${casterMass}"/>
+			<xacro:inertial_sphere m="${casterMass}" r="${casterRadius}"/>
+		</inertial>
+		</link>
+		
+<!--ADD LEFT WHEEL-->
+	<joint name="left_wheel_hinge" type="continuous">
+		<parent link="chassis"/>
+		<child link="left_wheel"/>
+		<origin xyz="0 ${-0.5*2*chassisRadius} 0" rpy="0 0 0" />
+		<axis xyz="0 1 0" rpy="0 0 0" />
+		<limit effort="100" velocity="100"/>
+		<joint_properties damping="0.0" friction="0.0"/>
+	</joint>
+
+	<link name="left_wheel">
+		<collision>
+			<origin xyz="0 0 0" rpy="0 ${PI/2} ${PI/2}" />
+			<geometry>
+				<cylinder length="${wheelHeight}" radius="${wheelRadius}"/>
+			</geometry>
+		</collision>
+		
+		<visual>
+			<origin xyz="0 0 0" rpy="0 ${PI/2} ${PI/2}" />
+			<geometry>
+				<cylinder length="${wheelHeight}" radius="${wheelRadius}"/>
+			</geometry>
+			<material name="white"/>
+		</visual>
+		
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 ${PI/2} ${PI/2}" />
+			<mass value="${wheelMass}"/>
+			<xacro:inertial_cylinder m="${wheelMass}" r="${wheelRadius}" h="${wheelHeight}"/>
+		</inertial>
+	</link>
+
+	<transmission name="left_trans">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="left_wheel_hinge">
+			<hardwareInterface>EffortJointInterface</hardwareInterface>
+		</joint>
+
+		<actuator name="leftMotor">
+			<hardwareInterface>EffortJointInterface</hardwareInterface>
+			<mechanicalReduction>10</mechanicalReduction>
+		</actuator>
+	</transmission>
+	
+<!--ADD RIGHT WHEEL-->
+	<joint name="right_wheel_hinge" type="continuous">
+		<parent link="chassis"/>
+		<child link="right_wheel"/>
+		<origin xyz="0 ${0.5 *2*chassisRadius} 0" rpy="0 0 0" />
+		<axis xyz="0 1 0" rpy="0 0 0" />
+		<limit effort="100" velocity="100"/>
+		<joint_properties damping="0.0" friction="0.0"/>
+	</joint>
+
+	<link name="right_wheel">
+		<collision>
+			<origin xyz="0 0 0" rpy="0 ${PI/2} ${PI/2}" />
+			<geometry>
+				<cylinder length="${wheelHeight}" radius="${wheelRadius}"/>
+			</geometry>
+		</collision>
+		
+		<visual>
+			<origin xyz="0 0 0" rpy="0 ${PI/2} ${PI/2}" />
+			<geometry>
+				<cylinder length="${wheelHeight}" radius="${wheelRadius}"/>
+			</geometry>
+			<material name="white"/>
+		</visual>
+		
+		<inertial>
+			<origin xyz="0 0 0" rpy="0 ${PI/2} ${PI/2}" />
+			<mass value="${wheelMass}"/>
+			<xacro:inertial_cylinder m="${wheelMass}" r="${wheelRadius}" h="${wheelHeight}"/>
+		</inertial>
+	</link>
+																									
+	<transmission name="right_trans">
+		<type>transmission_interface/SimpleTransmission</type>
+		<joint name="right_wheel_hinge">
+			<hardwareInterface>EffortJointInterface</hardwareInterface>
+		</joint>
+		
+		<actuator name="rightMotor">
+			<hardwareInterface>EffortJointInterface</hardwareInterface>
+			<mechanicalReduction>10</mechanicalReduction>
+		</actuator>
+	</transmission>
+	
+</robot>
+
+
+

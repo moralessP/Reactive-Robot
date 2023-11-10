@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<robot name = "mp23" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:include filename="$(find mp23)/description/urdf/robot_core.xacro" />
+    <xacro:include filename="$(find mp23)/description/urdf/laser_scan.xacro"/>
+
+</robot>
